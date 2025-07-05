@@ -82,7 +82,13 @@ export default function ColumnManager({ open, onClose }: ColumnManagerProps) {
       const sanitizedField = sanitizeFieldName(watchedHeaderName);
       if (sanitizedField) {
         // Update field name automatically
-        reset(prev => ({ ...prev, field: sanitizedField }));
+        reset({
+          field: sanitizedField,
+          headerName: watchedHeaderName,
+          type: 'string',
+          width: 150,
+          required: false,
+        });
       }
     }
   }, [watchedHeaderName, watchedField, reset]);
@@ -90,6 +96,7 @@ export default function ColumnManager({ open, onClose }: ColumnManagerProps) {
   const handleAddColumn = (data: AddColumnFormData) => {
     // Check if field name is unique
     if (!isUniqueFieldName(data.field, columns)) {
+      console.log('Field name is not unique');
       return;
     }
 
@@ -98,16 +105,23 @@ export default function ColumnManager({ open, onClose }: ColumnManagerProps) {
       field: data.field,
       headerName: data.headerName,
       type: data.type,
-      width: data.width || 150,
+      width: data.width,
       visible: true,
       sortable: true,
       editable: true,
-      required: data.required || false,
+      required: data.required,
       order: columns.length,
     };
 
+    console.log('Adding new column:', newColumn);
     dispatch(addColumn(newColumn));
-    reset();
+    reset({
+      field: '',
+      headerName: '',
+      type: 'string',
+      width: 150,
+      required: false,
+    });
     setShowAddForm(false);
   };
 
@@ -135,7 +149,13 @@ export default function ColumnManager({ open, onClose }: ColumnManagerProps) {
   };
 
   const handleClose = () => {
-    reset();
+    reset({
+      field: '',
+      headerName: '',
+      type: 'string',
+      width: 150,
+      required: false,
+    });
     setShowAddForm(false);
     onClose();
   };

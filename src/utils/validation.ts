@@ -104,8 +104,12 @@ export const columnValidationSchema = yup.object().shape({
     .oneOf(['string', 'number', 'date', 'boolean'], 'Invalid type'),
   width: yup
     .number()
+    .required('Width is required')
     .min(50, 'Width must be at least 50px')
     .max(500, 'Width must be at most 500px'),
+  required: yup
+    .boolean()
+    .required('Required flag is required'),
 });
 
 /**

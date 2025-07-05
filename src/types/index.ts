@@ -68,8 +68,8 @@ export interface AddColumnFormData {
   field: string;
   headerName: string;
   type: 'string' | 'number' | 'date' | 'boolean';
-  width?: number;
-  required?: boolean;
+  width: number;
+  required: boolean;
 }
 
 export interface ImportFormData {

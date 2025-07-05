@@ -54,9 +54,9 @@ export default function Toolbar() {
   const handleAddRow = () => {
     const newRow: TableRow = {
       id: generateClientId('row'),
-      name: '',
-      email: '',
-      age: 0,
+      name: 'Sanjana Devi',
+      email: 'sanjanadevi@google.com',
+      age: 21,
       role: '',
       department: '',
       location: '',
