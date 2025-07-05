@@ -2,6 +2,9 @@
 
 A powerful and feature-rich data table manager built with Next.js 14, Redux Toolkit, and Material UI. This application provides comprehensive table management capabilities with a modern, responsive design.
 
+![image](https://github.com/user-attachments/assets/750f61f1-7d64-4d56-b3ea-04cb30e92caa)
+
+
 ## ✨ Features
 
 ### Core Functionality
@@ -163,10 +166,6 @@ Extend validation schemas in `utils/validation.ts`:
 3. Make your changes
 4. Add tests if applicable
 5. Submit a pull request
-
-## 📄 License
-
-This project is open source and available under the [MIT License](LICENSE).
 
 ## 🔍 Features in Detail
 
