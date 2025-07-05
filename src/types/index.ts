@@ -7,7 +7,7 @@ export interface TableRow {
   role: string;
   department?: string;
   location?: string;
-  [key: string]: any;
+  [key: string]: unknown;
 }
 
 export interface TableColumn {
@@ -87,8 +87,8 @@ export interface ExportFormData {
 
 // CSV processing types
 export interface CSVParseResult {
-  data: any[];
-  errors: any[];
+  data: unknown[];
+  errors: unknown[];
   meta: {
     fields?: string[];
     delimiter: string;
@@ -167,6 +167,6 @@ export interface ValidationError {
 
 export interface FieldValidationRule {
   type: 'required' | 'email' | 'number' | 'minLength' | 'maxLength' | 'pattern';
-  value?: any;
+  value?: unknown;
   message: string;
 }

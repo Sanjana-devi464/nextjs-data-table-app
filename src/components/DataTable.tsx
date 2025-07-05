@@ -61,10 +61,9 @@ export default function DataTable({ className }: DataTableProps) {
     searchTerm,
     selectedRows,
     editingRows,
-    loading,
   } = useSelector((state: RootState) => state.table);
 
-  const [editingValues, setEditingValues] = useState<Record<string, any>>({});
+  const [editingValues, setEditingValues] = useState<Record<string, unknown>>({});
 
   // Filter and sort data
   const filteredAndSortedRows = useMemo(() => {
@@ -85,10 +84,14 @@ export default function DataTable({ className }: DataTableProps) {
         const aValue = a[sortConfig.field];
         const bValue = b[sortConfig.field];
 
-        if (aValue < bValue) {
+        // Convert to comparable values
+        const aStr = String(aValue || '').toLowerCase();
+        const bStr = String(bValue || '').toLowerCase();
+
+        if (aStr < bStr) {
           return sortConfig.direction === 'asc' ? -1 : 1;
         }
-        if (aValue > bValue) {
+        if (aStr > bStr) {
           return sortConfig.direction === 'asc' ? 1 : -1;
         }
         return 0;
@@ -163,7 +166,7 @@ export default function DataTable({ className }: DataTableProps) {
   };
 
   const handleSaveEditing = (rowId: string) => {
-    const editedRow = editingValues[rowId];
+    const editedRow = editingValues[rowId] as Record<string, unknown>;
     if (!editedRow) return;
 
     // Validate all fields
@@ -199,11 +202,11 @@ export default function DataTable({ className }: DataTableProps) {
     });
   };
 
-  const handleCellChange = (rowId: string, field: string, value: any) => {
+  const handleCellChange = (rowId: string, field: string, value: unknown) => {
     setEditingValues(prev => ({
       ...prev,
       [rowId]: {
-        ...prev[rowId],
+        ...(prev[rowId] as Record<string, unknown> || {}),
         [field]: value,
       },
     }));
@@ -297,7 +300,7 @@ export default function DataTable({ className }: DataTableProps) {
               {paginatedRows.map((row: TableRowType) => {
                 const isRowSelected = isSelected(row.id);
                 const isRowEditing = isEditing(row.id);
-                const editingData = editingValues[row.id] || row;
+                const editingData = (editingValues[row.id] as Record<string, unknown>) || row;
 
                 return (
                   <TableRow
@@ -336,7 +339,7 @@ export default function DataTable({ className }: DataTableProps) {
                               />
                             ) : (
                               <Typography variant="body2">
-                                {row[column.field] || '-'}
+                                {String(row[column.field] || '-')}
                               </Typography>
                             )}
                           </Box>

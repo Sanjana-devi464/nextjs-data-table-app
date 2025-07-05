@@ -5,10 +5,10 @@ import { TableRow, TableColumn, ValidationError } from '@/types';
  * Validation schema for table rows
  */
 export const createRowValidationSchema = (columns: TableColumn[]) => {
-  const schema: Record<string, any> = {};
+  const schema: Record<string, yup.AnySchema> = {};
   
   columns.forEach(column => {
-    let fieldSchema: any;
+    let fieldSchema: yup.AnySchema;
     
     switch (column.type) {
       case 'string':
@@ -33,7 +33,7 @@ export const createRowValidationSchema = (columns: TableColumn[]) => {
     
     // Add email validation for email fields
     if (column.field === 'email') {
-      fieldSchema = fieldSchema.email('Must be a valid email');
+      fieldSchema = (fieldSchema as yup.StringSchema).email('Must be a valid email');
     }
     
     schema[column.field] = fieldSchema;
@@ -175,7 +175,7 @@ export const isUniqueFieldName = (fieldName: string, columns: TableColumn[], exc
  * Validate cell value based on column type
  */
 export const validateCellValue = (
-  value: any,
+  value: unknown,
   column: TableColumn
 ): { isValid: boolean; error?: string } => {
   if (column.required && (!value || value === '')) {
@@ -194,7 +194,7 @@ export const validateCellValue = (
       break;
       
     case 'date':
-      if (isNaN(Date.parse(value))) {
+      if (isNaN(Date.parse(String(value)))) {
         return { isValid: false, error: 'Must be a valid date' };
       }
       break;
@@ -226,7 +226,7 @@ export const isValidEmail = (email: string): boolean => {
 /**
  * Convert value to appropriate type
  */
-export const convertToType = (value: any, type: string): any => {
+export const convertToType = (value: unknown, type: string): unknown => {
   if (value === null || value === undefined || value === '') {
     return '';
   }
@@ -237,7 +237,7 @@ export const convertToType = (value: any, type: string): any => {
     case 'boolean':
       return Boolean(value);
     case 'date':
-      return new Date(value);
+      return new Date(String(value));
     default:
       return String(value);
   }

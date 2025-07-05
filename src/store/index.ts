@@ -7,13 +7,13 @@ import uiReducer from './slices/uiSlice';
 
 // Create a noop storage for SSR
 const noopStorage = {
-  getItem(_key: string) {
+  getItem() {
     return Promise.resolve(null);
   },
   setItem(_key: string, value: unknown) {
     return Promise.resolve(value);
   },
-  removeItem(_key: string) {
+  removeItem() {
     return Promise.resolve();
   },
 };

@@ -43,7 +43,7 @@ export default function ImportDialog({ open, onClose }: ImportDialogProps) {
   const [selectedFile, setSelectedFile] = useState<File | null>(null);
   const [isImporting, setIsImporting] = useState(false);
   const [importErrors, setImportErrors] = useState<CSVImportError[]>([]);
-  const [importPreview, setImportPreview] = useState<any[]>([]);
+  const [importPreview, setImportPreview] = useState<unknown[]>([]);
   const [showPreview, setShowPreview] = useState(false);
   const [hasHeader, setHasHeader] = useState(true);
   const [delimiter, setDelimiter] = useState(',');
@@ -225,13 +225,16 @@ export default function ImportDialog({ open, onClose }: ImportDialogProps) {
                       First 5 rows:
                     </Typography>
                     <Box sx={{ bgcolor: 'background.default', p: 2, borderRadius: 1 }}>
-                      {importPreview.map((row, index) => (
-                        <Box key={index} sx={{ mb: 1 }}>
-                          <Typography variant="body2">
-                            <strong>Row {index + 1}:</strong> {row.name} - {row.email}
-                          </Typography>
-                        </Box>
-                      ))}
+                      {importPreview.map((row, index) => {
+                        const rowData = row as Record<string, unknown>;
+                        return (
+                          <Box key={index} sx={{ mb: 1 }}>
+                            <Typography variant="body2">
+                              <strong>Row {index + 1}:</strong> {String(rowData.name)} - {String(rowData.email)}
+                            </Typography>
+                          </Box>
+                        );
+                      })}
                     </Box>
                   </Box>
                 )}
@@ -266,7 +269,7 @@ export default function ImportDialog({ open, onClose }: ImportDialogProps) {
           {/* Sample Data */}
           <Box>
             <Typography variant="body2" color="text.secondary" gutterBottom>
-              Don't have a CSV file? 
+              Don&apos;t have a CSV file? 
               <Button
                 size="small"
                 startIcon={<GetApp />}

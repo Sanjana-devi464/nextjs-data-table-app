@@ -34,19 +34,17 @@ import {
 } from '@mui/icons-material';
 import { useSelector, useDispatch } from 'react-redux';
 import { useForm, Controller } from 'react-hook-form';
-import { yupResolver } from '@hookform/resolvers/yup';
-import { DragDropContext, Droppable, Draggable } from '@hello-pangea/dnd';
+import { DragDropContext, Droppable, Draggable, DropResult } from '@hello-pangea/dnd';
 import { RootState } from '@/store';
 import {
   addColumn,
-  updateColumn,
   deleteColumn,
   toggleColumnVisibility,
   reorderColumns,
 } from '@/store/slices/tableSlice';
-import { setColumnManagerOpen, showConfirmDialog } from '@/store/slices/uiSlice';
+import { showConfirmDialog } from '@/store/slices/uiSlice';
 import { TableColumn, AddColumnFormData } from '@/types';
-import { columnValidationSchema, sanitizeFieldName, isUniqueFieldName } from '@/utils/validation';
+import { sanitizeFieldName, isUniqueFieldName } from '@/utils/validation';
 import { generateClientId } from '@/utils/idGenerator';
 
 interface ColumnManagerProps {
@@ -125,7 +123,7 @@ export default function ColumnManager({ open, onClose }: ColumnManagerProps) {
     dispatch(toggleColumnVisibility(columnId));
   };
 
-  const handleDragEnd = (result: any) => {
+  const handleDragEnd = (result: DropResult) => {
     if (!result.destination) return;
 
     const sourceIndex = result.source.index;

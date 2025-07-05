@@ -23,15 +23,16 @@ export const parseCSVFile = (file: File, hasHeader: boolean = true): Promise<{
           const rows: TableRow[] = [];
           const errors: CSVImportError[] = [];
           
-          results.data.forEach((row: any, index: number) => {
+          results.data.forEach((row: unknown, index: number) => {
+            const rowObj = row as Record<string, unknown>;
             const rowData: TableRow = {
               id: generateClientId(`imported_${index}`),
-              name: row.name || '',
-              email: row.email || '',
-              age: parseFloat(row.age) || 0,
-              role: row.role || '',
-              department: row.department || '',
-              location: row.location || '',
+              name: String(rowObj.name || ''),
+              email: String(rowObj.email || ''),
+              age: parseFloat(String(rowObj.age)) || 0,
+              role: String(rowObj.role || ''),
+              department: String(rowObj.department || ''),
+              location: String(rowObj.location || ''),
             };
             
             // Validate required fields
@@ -57,7 +58,7 @@ export const parseCSVFile = (file: File, hasHeader: boolean = true): Promise<{
               });
             }
             
-            if (row.age && isNaN(parseFloat(row.age))) {
+            if (rowObj.age && isNaN(parseFloat(String(rowObj.age)))) {
               errors.push({
                 row: index + 1,
                 field: 'age',
@@ -66,9 +67,9 @@ export const parseCSVFile = (file: File, hasHeader: boolean = true): Promise<{
             }
             
             // Add any additional fields from CSV
-            Object.keys(row).forEach(key => {
+            Object.keys(rowObj).forEach(key => {
               if (!['name', 'email', 'age', 'role', 'department', 'location'].includes(key)) {
-                rowData[key] = row[key];
+                rowData[key] = rowObj[key];
               }
             });
             
@@ -80,7 +81,7 @@ export const parseCSVFile = (file: File, hasHeader: boolean = true): Promise<{
           reject(error);
         }
       },
-      error: (error: any) => {
+      error: (error: unknown) => {
         reject(error);
       },
     });
@@ -107,7 +108,7 @@ export const exportToCSV = (
     
     // Prepare data for CSV
     const csvData = rows.map(row => {
-      const csvRow: Record<string, any> = {};
+      const csvRow: Record<string, unknown> = {};
       sortedColumns.forEach(column => {
         csvRow[column.headerName] = row[column.field] || '';
       });
@@ -146,7 +147,7 @@ export const exportToJSON = (
     
     // Prepare data for JSON
     const jsonData = rows.map(row => {
-      const jsonRow: Record<string, any> = {};
+      const jsonRow: Record<string, unknown> = {};
       columnsToExport.forEach(column => {
         jsonRow[column.field] = row[column.field];
       });
